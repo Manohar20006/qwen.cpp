@@ -1,5 +1,10 @@
 # qwen.cpp
 
+![Platform](https://img.shields.io/badge/platform-Linux-blue)
+![CUDA](https://img.shields.io/badge/CUDA-required-green)
+![VRAM](https://img.shields.io/badge/tested-6GB%20VRAM-orange)
+![API](https://img.shields.io/badge/API-OpenAI--compatible-purple)
+
 Run **Qwen3.6 35B-A3B MoE locally on a 6 GB VRAM laptop**.
 
 `qwen.cpp` is a CUDA-focused `llama.cpp` fork built for one practical goal:
@@ -17,6 +22,10 @@ On the tested RTX 4050 Laptop GPU with 6 GB VRAM, this setup has reached:
 | --- | ---: |
 | Prompt / prefill | 50+ tokens/s |
 | Decode / generation | around 20 tokens/s in favorable runs |
+
+- Runs through the normal `llama-server` web UI.
+- Connects to OpenCode, Hermes, and other OpenAI-compatible coding tools.
+- Streams experts from SSD instead of forcing full RAM residency.
 
 The important part is not just the speed. The machine stays usable. You can
 keep a browser, editor, terminal, and other normal desktop work open because the
@@ -116,29 +125,18 @@ Start the server:
 ./scripts/run-qwen36-moe.sh
 ```
 
-Open the built-in web chat:
+Use these local URLs after the server starts:
 
-```text
-http://127.0.0.1:8090
-```
-
-OpenAI-compatible API base URL for clients such as OpenCode, Hermes, or other
-tools:
-
-```text
-http://127.0.0.1:8090/v1
-```
+| Use | URL |
+| --- | --- |
+| Web chat | `http://127.0.0.1:8090` |
+| OpenAI-compatible API | `http://127.0.0.1:8090/v1` |
+| Health check | `http://127.0.0.1:8090/v1/models` |
 
 Default model alias:
 
 ```text
 qwen3.6-moe-tq3
-```
-
-Health check:
-
-```bash
-curl http://127.0.0.1:8090/v1/models
 ```
 
 > [!TIP]
@@ -227,7 +225,9 @@ expert-suites/moe-static-experts-suite-10240.txt
 
 ## Known Limits
 
-- This is currently a Linux + CUDA path. Windows is not the main target yet.
+> [!IMPORTANT]
+> This is currently Linux/CUDA-first. Windows support is not the main path yet.
+
 - The model weights are not included. You must provide the GGUF file yourself.
 - Performance depends heavily on SSD speed, laptop power mode, thermals, CUDA
   version, and how much VRAM is available after the desktop environment.
