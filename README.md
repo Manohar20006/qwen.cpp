@@ -23,6 +23,10 @@ keep a browser, editor, terminal, and other normal desktop work open because the
 project is designed around **SSD expert streaming** and bounded RAM pressure,
 not brute-force RAM residency.
 
+The project is especially focused on local coding workflows: use it from the
+built-in web UI, or connect OpenCode, Hermes, and other OpenAI-compatible coding
+agents to the local server.
+
 ## Platform Status
 
 This is currently a **Linux-first CUDA project**. The tested path is Linux +
@@ -145,6 +149,7 @@ The default setup is tuned for a single-GPU laptop/server workflow:
 - Avoid long-context KV dequant overhead with fused TQ3 CUDA FlashAttention.
 - Serve through the normal OpenAI-compatible `llama-server`.
 - Chat in the browser at `http://127.0.0.1:8090`.
+- Connect local coding agents through `http://127.0.0.1:8090/v1`.
 
 ## Tested Hardware
 
