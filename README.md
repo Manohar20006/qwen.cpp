@@ -140,10 +140,11 @@ Health check:
 curl http://127.0.0.1:8090/v1/models
 ```
 
-Tip: if setup fails, you can paste the README, your terminal output, and your
-hardware details into any coding assistant and ask it to help you debug the
-repo setup. Most issues are missing CUDA/CMake dependencies, a missing model
-file, or port `8090` already being used.
+> [!TIP]
+> If setup fails, you can paste the README, your terminal output, and your
+> hardware details into any coding assistant and ask it to help you debug the
+> repo setup. Most issues are missing CUDA/CMake dependencies, a missing model
+> file, or port `8090` already being used.
 
 ## Why This Exists
 
