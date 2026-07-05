@@ -102,6 +102,10 @@ Build the CUDA/GDS server:
 ./scripts/build-gds-cuda.sh
 ```
 
+This is a one-time build step. You do not need to run it every time you start
+the model unless you update the code, clean the build directory, or change build
+settings.
+
 The first build can take several minutes. Wait until it finishes and prints the
 `build-gds-cuda/bin/llama-server` path before starting the model.
 
@@ -135,6 +139,11 @@ Health check:
 ```bash
 curl http://127.0.0.1:8090/v1/models
 ```
+
+Tip: if setup fails, you can paste the README, your terminal output, and your
+hardware details into any coding assistant and ask it to help you debug the
+repo setup. Most issues are missing CUDA/CMake dependencies, a missing model
+file, or port `8090` already being used.
 
 ## Why This Exists
 
