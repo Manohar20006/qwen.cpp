@@ -148,7 +148,14 @@ The default setup is tuned for a single-GPU laptop/server workflow:
 
 ## Tested Hardware
 
-This repo was developed and tested on:
+This repo was developed and tested with:
+
+| Item | Tested setup |
+| --- | --- |
+| Model source | `unsloth/Qwen3.6-35B-A3B-MTP-GGUF` |
+| GGUF file used by default | `Qwen3.6-35B-A3B-UD-Q4_K_M.gguf` |
+
+Hardware used for the numbers above:
 
 | Component | Tested setup |
 | --- | --- |
@@ -167,7 +174,8 @@ need lower context or cache settings.
 
 ## Required Files
 
-The GGUF model is not included in this repo. Put it here:
+The GGUF model is not included in this repo. Download the tested model from
+`unsloth/Qwen3.6-35B-A3B-MTP-GGUF`, then put the default GGUF file here:
 
 ```text
 models/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf
@@ -194,6 +202,24 @@ expert-suites/moe-static-experts-suite-6144.txt
 expert-suites/moe-static-experts-suite-7168.txt
 expert-suites/moe-static-experts-suite-8192.txt
 expert-suites/moe-static-experts-suite-10240.txt
+```
+
+## Known Limits
+
+- This is currently a Linux + CUDA path. Windows is not the main target yet.
+- The model weights are not included. You must provide the GGUF file yourself.
+- Performance depends heavily on SSD speed, laptop power mode, thermals, CUDA
+  version, and how much VRAM is available after the desktop environment.
+- The default settings are tuned for the tested 6 GB VRAM laptop. Larger GPUs
+  should raise `MOE_GPU_CACHE_MIB`; smaller or busier GPUs may need lower
+  `CTX`, `BATCH`, `UBATCH`, or GPU cache size.
+- The included expert suites are static routing-trace selections. They are a
+  practical default for this model, not a universal optimal expert set for every
+  workload.
+- If port `8090` is already in use, set another port:
+
+```bash
+PORT=8091 ./scripts/run-qwen36-moe.sh
 ```
 
 ## Build
