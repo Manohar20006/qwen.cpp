@@ -308,6 +308,7 @@ The most important variables are:
 | `MOE_PINNED_CACHE_MIB` | `8192` | `--moe-pinned-cache-mib` | Host pinned RAM budget for static expert cache. Raise only if you have enough system RAM. |
 | `GDS_READ_THREADS` | `20` | `LLAMA_GDS_READ_THREADS` | Number of parallel GDS/cuFile read workers for expert streaming. |
 | `SPEC_DRAFT_N_MAX` | `3` | `--spec-draft-n-max` | MTP speculative draft length. Try `2` or `3` when benchmarking. |
+| `CHECKPOINT_MIN_STEP` | `0` | `--checkpoint-min-step` | Minimum spacing between prompt checkpoints. `0` keeps OpenAI chat/agent turns cache-friendly by checkpointing short turn boundaries. |
 | `REASONING` | `off` | `--reasoning` | Enables or disables reasoning mode. |
 | `REASONING_BUDGET` | `0` | `--reasoning-budget` | Reasoning token budget when reasoning is enabled. |
 | `CACHE_REUSE` | `0` | `--cache-reuse` | KV-shift cache reuse. Kept off by default because the current MTP context reports it unsupported. |
@@ -385,6 +386,8 @@ curl http://127.0.0.1:8090/v1/chat/completions \
   block the next request on a single-slot server.
 - `CACHE_REUSE` defaults to `0` because the current MTP speculative context
   reports KV-shift cache reuse as unsupported.
+- `CHECKPOINT_MIN_STEP=0` keeps same-session OpenAI chat and coding-agent
+  prompts from falling back to only the system-prompt checkpoint on short turns.
 
 ## Practical Laptop Tips
 
