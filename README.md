@@ -23,6 +23,110 @@ keep a browser, editor, terminal, and other normal desktop work open because the
 project is designed around **SSD expert streaming** and bounded RAM pressure,
 not brute-force RAM residency.
 
+## Platform Status
+
+This is currently a **Linux-first CUDA project**. The tested path is Linux +
+NVIDIA GPU + CUDA + fast SSD. Windows support is not the primary target yet;
+work on a Windows-friendly path is planned/in progress.
+
+## Requirements
+
+System requirements:
+
+- Linux.
+- NVIDIA GPU with CUDA support.
+- Recent NVIDIA driver.
+- CUDA toolkit installed and visible to CMake.
+- Fast SSD for model and expert streaming.
+- CMake, C++ compiler, Git, Python 3, and pip.
+
+On Ubuntu-like systems, install the common build dependencies first:
+
+```bash
+sudo apt update
+sudo apt install -y build-essential cmake git python3 python3-pip python3-venv pkg-config
+```
+
+Install the NVIDIA driver and CUDA toolkit using NVIDIA's instructions for your
+Linux distribution. After installation, this should work:
+
+```bash
+nvidia-smi
+nvcc --version
+```
+
+Python dependencies are mainly needed for helper scripts such as conversion,
+tracing, benchmarking, and expert-suite generation:
+
+```bash
+python3 -m pip install -r requirements.txt
+```
+
+If your distro blocks system-wide pip installs, use a virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -r requirements.txt
+```
+
+## Quick Start
+
+Clone the repo:
+
+```bash
+git clone https://github.com/Manohar20006/qwen.cpp.git
+cd qwen.cpp
+```
+
+Place the GGUF model in `models/`:
+
+```bash
+mkdir -p models
+# Put this file here:
+# models/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf
+```
+
+Build the CUDA/GDS server:
+
+```bash
+./scripts/build-gds-cuda.sh
+```
+
+The first build can take several minutes. Wait until it finishes and prints the
+`build-gds-cuda/bin/llama-server` path before starting the model.
+
+Start the server:
+
+```bash
+./scripts/run-qwen36-moe.sh
+```
+
+Open the built-in web chat:
+
+```text
+http://127.0.0.1:8090
+```
+
+OpenAI-compatible API base URL for clients such as OpenCode, Hermes, or other
+tools:
+
+```text
+http://127.0.0.1:8090/v1
+```
+
+Default model alias:
+
+```text
+qwen3.6-moe-tq3
+```
+
+Health check:
+
+```bash
+curl http://127.0.0.1:8090/v1/models
+```
+
 ## Why This Exists
 
 Most local MoE setups fail on small GPUs for one of two reasons:
@@ -60,58 +164,6 @@ This repo was developed and tested on:
 The default launch keeps the GPU cache modest and uses pinned system RAM for a
 static expert suite. Larger GPUs can raise the cache sizes; smaller systems may
 need lower context or cache settings.
-
-## Practical Laptop Tips
-
-For best performance:
-
-- Keep the laptop plugged in.
-- Use the vendor/OS performance mode instead of silent or battery-saver mode.
-- Keep the model and expert files on a fast SSD.
-- Let the GPU stay cool; thermal throttling can reduce both prompt and decode
-  speed.
-- Leave some system RAM free for the OS and browser. The default settings are
-  meant to keep the machine usable, not consume every available GiB.
-
-## Quick Start
-
-Clone the repo, place the GGUF model in `models/`, build, then start the server:
-
-```bash
-git clone <your-repo-url> qwen.cpp
-cd qwen.cpp
-
-mkdir -p models
-# Put this file here:
-# models/Qwen3.6-35B-A3B-UD-Q4_K_M.gguf
-
-./scripts/build-gds-cuda.sh
-./scripts/run-qwen36-moe.sh
-```
-
-Open the built-in web chat:
-
-```text
-http://127.0.0.1:8090
-```
-
-OpenAI-compatible API base URL:
-
-```text
-http://127.0.0.1:8090/v1
-```
-
-Default model alias:
-
-```text
-qwen3.6-moe-tq3
-```
-
-Health check:
-
-```bash
-curl http://127.0.0.1:8090/v1/models
-```
 
 ## Required Files
 
@@ -286,6 +338,18 @@ curl http://127.0.0.1:8090/v1/chat/completions \
   block the next request on a single-slot server.
 - `CACHE_REUSE` defaults to `0` because the current MTP speculative context
   reports KV-shift cache reuse as unsupported.
+
+## Practical Laptop Tips
+
+For best performance:
+
+- Keep the laptop plugged in.
+- Use the vendor/OS performance mode instead of silent or battery-saver mode.
+- Keep the model and expert files on a fast SSD.
+- Let the GPU stay cool; thermal throttling can reduce both prompt and decode
+  speed.
+- Leave some system RAM free for the OS and browser. The default settings are
+  meant to keep the machine usable, not consume every available GiB.
 
 ## Trace And Expert Suite Generation
 
